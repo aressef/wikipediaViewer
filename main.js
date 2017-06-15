@@ -1,3 +1,17 @@
+window.onkeyup = keyup;
+var inputTextValue;
+var url;
+
+function keyup(e) {
+  inputTextValue = e.target.value;
+
+  if(e.keyCode == 13) {
+    var replaceSpaces = inputTextValue.replace(' ', '%20');
+    console.log(replaceSpaces);
+    url = "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=search&srsearch=" + replaceSpaces + "&utf8=";
+    xhttp.send();
+  }
+}
 
 // AJAX Request to WikiMedia
 var xhttp = new XMLHttpRequest();
@@ -6,5 +20,7 @@ xhttp.onreadystatechange = function() {
     console.log(this);
   }
 }
-xhttp.open("GET", "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&errorformat=plaintext&prop=revisions&titles=Main+Page&rvprop=content", true);
-xhttp.send();
+xhttp.open("GET", url, true);
+//xhttp.send();
+
+// https://en.wikipedia.org/w/api.php?action=query&format=jsonfm&list=search&origin=*&errorformat=plaintext&srsearch=Albert%20Einstein&utf8=
