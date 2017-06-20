@@ -6,8 +6,10 @@ function keyup(e) {
   inputTextValue = e.target.value;
 
   if(e.keyCode == 13) {
-    var replaceSpaces = encodeURIComponent(inputTextValue.replace(' ', '%20'));
-    url = "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=search&srsearch=" + replaceSpaces + "&utf8=";
+    var spacesToPercentTwenty = encodeURIComponent(inputTextValue.replace(' ', '%20'));
+
+    urlForSearchResults = "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=search&srsearch=" + spacesToPercentTwenty + "&utf8=";
+
     getRequest();
   }
 }
@@ -27,32 +29,45 @@ function getRequest() {
       addResults();
     }
   }
-  xhttp.open("GET", url, true);
+  xhttp.open("GET", urlForSearchResults, true);
   xhttp.send();
 }
 
 function addResults() {
-  var resultList = document.querySelector('ul');
+  var resultContainer = document.querySelector('div');
 
   for (var i = 0; i < 10; i++) {
-    var searchResultsDiv = document.createElement('div');
-    searchResultsDiv.className = 'searchResultsDiv';
-    var searchResults = document.createElement('ul');
+    var indResult = document.createElement('div');
+    var indResultList = document.createElement('ul');
     var searchResultTitle = document.createElement('li');
     var searchResultSnippet = document.createElement('li');
+    var searchResultURL = document.createElement('a');
+
+    indResult.className = 'indResult';
+    searchResultTitle.className = 'title';
+    searchResultSnippet.className = 'snippet';
 
     searchResultTitle.textContent = parsedResults[i].title;
     searchResultSnippet.textContent = parsedResults[i].snippet;
+    searchResultURL.textContent = 'Go to Page';
+    searchResultURL.href = 'https://en.wikipedia.org/wiki/' + searchResultTitle.textContent.replaceAll(' ', '_');
 
     // Remove HTML tags from snippet
     var snippetText = searchResultSnippet;
     var strippedString = snippetText.textContent.replace(/(<([^>]+)>)/ig,"");
-    searchResultSnippet.innerHTML = strippedString;
+    searchResultSnippet.innerHTML = strippedString + '...';
 
-    resultList.appendChild(searchResultsDiv);
-    searchResultsDiv.appendChild(searchResults);
-    searchResults.appendChild(searchResultTitle);
-    searchResults.appendChild(searchResultSnippet);
+    resultContainer.appendChild(indResult);
+    indResult.appendChild(indResultList);
+    indResultList.appendChild(searchResultTitle);
+    indResultList.appendChild(searchResultSnippet);
+    indResultList.appendChild(searchResultURL);
+
   }
 
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
