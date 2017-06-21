@@ -20,12 +20,12 @@ function getRequest() {
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
       var parsed = JSON.parse(this.responseText);
-      console.log(parsed);
       parsedResults = parsed.query.search;
 
       for(var i = 0; i < 10; i++) {
-        console.log(parsed.query.search[i]);
+        parsed.query.search[i];
       }
+
       addResults();
     }
   }
@@ -34,7 +34,7 @@ function getRequest() {
 }
 
 function addResults() {
-  var resultContainer = document.querySelector('div');
+  var resultContainer = document.querySelector('.resultContainer');
 
   for (var i = 0; i < 10; i++) {
     var indResult = document.createElement('div');
@@ -51,6 +51,7 @@ function addResults() {
     searchResultSnippet.textContent = parsedResults[i].snippet;
     searchResultURL.textContent = 'Go to Page';
     searchResultURL.href = 'https://en.wikipedia.org/wiki/' + searchResultTitle.textContent.replaceAll(' ', '_');
+    searchResultURL.target = '_blank';
 
     // Remove HTML tags from snippet
     var snippetText = searchResultSnippet;
