@@ -43,6 +43,7 @@ function addResults() {
     var searchResultTitle = document.createElement('li');
     var searchResultSnippet = document.createElement('li');
 
+    searchResultLink.className = 'searchResultLink';
     indResult.className = 'indResult';
     searchResultTitle.className = 'title';
     searchResultSnippet.className = 'snippet';
@@ -50,7 +51,6 @@ function addResults() {
     searchResultTitle.textContent = parsedResults[i].title;
     console.log(searchResultTitle.textContent);
     searchResultSnippet.textContent = parsedResults[i].snippet;
-    // searchResultLink.textContent = 'Go to Page';
     searchResultLink.href = 'https://en.wikipedia.org/wiki/' + searchResultTitle.textContent.replaceAll(' ', '_');
     searchResultLink.target = '_blank';
 
