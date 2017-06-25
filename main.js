@@ -1,15 +1,13 @@
 window.onkeyup = keyup;
-var inputTextValue;
-var url;
 
 function keyup(e) {
   inputTextValue = e.target.value;
 
   if(e.keyCode == 13) {
-    var spacesToPercentTwenty = encodeURIComponent(inputTextValue.replace(' ', '%20'));
+    console.log(inputTextValue);
+    var spacesToPercentTwenty = encodeURIComponent(inputTextValue.replace(' ', '%'));
 
     urlForSearchResults = "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=search&srsearch=" + spacesToPercentTwenty + "&utf8=";
-
     getRequest();
   }
 }
@@ -35,37 +33,38 @@ function getRequest() {
 
 function addResults() {
   var resultContainer = document.querySelector('.resultContainer');
-
+  while (resultContainer.hasChildNodes()) {
+    resultContainer.removeChild(resultContainer.firstChild);
+  }
   for (var i = 0; i < 10; i++) {
+    var searchResultLink = document.createElement('a');
     var indResult = document.createElement('div');
     var indResultList = document.createElement('ul');
     var searchResultTitle = document.createElement('li');
     var searchResultSnippet = document.createElement('li');
-    var searchResultURL = document.createElement('a');
 
     indResult.className = 'indResult';
     searchResultTitle.className = 'title';
     searchResultSnippet.className = 'snippet';
 
     searchResultTitle.textContent = parsedResults[i].title;
+    console.log(searchResultTitle.textContent);
     searchResultSnippet.textContent = parsedResults[i].snippet;
-    searchResultURL.textContent = 'Go to Page';
-    searchResultURL.href = 'https://en.wikipedia.org/wiki/' + searchResultTitle.textContent.replaceAll(' ', '_');
-    searchResultURL.target = '_blank';
+    // searchResultLink.textContent = 'Go to Page';
+    searchResultLink.href = 'https://en.wikipedia.org/wiki/' + searchResultTitle.textContent.replaceAll(' ', '_');
+    searchResultLink.target = '_blank';
 
     // Remove HTML tags from snippet
     var snippetText = searchResultSnippet;
     var strippedString = snippetText.textContent.replace(/(<([^>]+)>)/ig,"");
     searchResultSnippet.innerHTML = strippedString + '...';
 
-    resultContainer.appendChild(indResult);
+    resultContainer.appendChild(searchResultLink);
+    searchResultLink.appendChild(indResult);
     indResult.appendChild(indResultList);
     indResultList.appendChild(searchResultTitle);
     indResultList.appendChild(searchResultSnippet);
-    indResultList.appendChild(searchResultURL);
-
   }
-
 }
 
 String.prototype.replaceAll = function(search, replacement) {
